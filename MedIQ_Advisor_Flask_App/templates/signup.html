@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/sign_in_sign_up.css">
+    <title>Sign Up | MedIQ Advisor</title>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="form-wrapper sign-up">
+            <form action="/signup" method="post">
+                <h2>Sign Up</h2>
+                <div class="input-group">
+                    <input type="text" id="username" name="username" required>
+                    <label for="username">Username</label>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="email" name="email" required>
+                    <label for="email">Email</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" name="password" required>
+                    <label for="password">Password</label>
+                </div>
+                <a href="/signin">
+                    <button type="button">Sign Up</button>
+                </a>
+
+                <div class="signUp-link">
+                    <p>Already have an account? <a href="/signin" class="signInBtn-link">Sign In</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const signInBtnLink = document.querySelector('.signInBtn-link');
+        const signUpBtnLink = document.querySelector('.signUpBtn-link');
+        const wrapper = document.querySelector('.wrapper');
+        signUpBtnLink.addEventListener('click', () => {
+            wrapper.classList.toggle('active');
+        });
+        signInBtnLink.addEventListener('click', () => {
+            wrapper.classList.toggle('active');
+        });
+    </script>
+</body>
+
+</html>

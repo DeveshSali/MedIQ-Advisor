@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chatbot</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f0f0;
+    }
+    .chat-container {
+        max-width: 500px;
+        margin: 50px auto;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    .chat-box {
+        height: 300px;
+        overflow-y: auto;
+        padding: 10px;
+    }
+    .user-message, .bot-message {
+        margin-bottom: 10px;
+    }
+    .user-message {
+        text-align: right;
+        color: #007bff;
+    }
+    .bot-message {
+        text-align: left;
+        color: #333;
+    }
+    .input-box {
+        display: flex;
+        padding: 10px;
+        background-color: #f9f9f9;
+    }
+    .input-box input[type="text"] {
+        flex: 1;
+        padding: 8px;
+        border: none;
+        border-radius: 5px;
+        outline: none;
+    }
+    .input-box button {
+        padding: 8px 15px;
+        margin-left: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        outline: none;
+    }
+</style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box"></div>
+        <div class="input-box">
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+<script>
+function sendMessage() {
+    var userInput = document.getElementById("user-input").value;
+    if (userInput.trim() === "") return;
+
+    // Create a JSON object with the user input
+    var data = { "user_input": userInput };
+
+    // Send a POST request to the /chat route with the JSON data
+    fetch("/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Display the bot's response
+        displayMessage(data.response, "bot");
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    });
+
+    // Clear the input field
+    document.getElementById("user-input").value = "";
+}
+
+function displayMessage(message, sender) {
+    var chatBox = document.getElementById("chat-box");
+    var messageDiv = document.createElement("div");
+    messageDiv.classList.add(sender + "-message");
+    messageDiv.innerText = message;
+    chatBox.appendChild(messageDiv);
+    chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
+}
+
+function getBotResponse(userInput) {
+    // Send user input to server using AJAX
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/chat", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+            var botResponse = JSON.parse(xhr.responseText).response;
+            displayMessage(botResponse, "bot");
+        }
+    };
+    xhr.send(JSON.stringify({ "user_input": userInput }));
+}
+
+</script>
+</body>
+</html>
